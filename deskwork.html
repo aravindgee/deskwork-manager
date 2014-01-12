@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>Deskwork Manager</title>
+    <style>
+      body { font-family: sans-serif; font-size: 13px; text-align: center; color: black}
+      .container { margin: auto; padding: 20px; width: 500px}
+      .info {text-align: justify }
+      .timer { margin: 10% }
+      #clock { font-size: 36px }
+      a { color: navy; text-decoration: none }
+      a:hover { color: red }
+      a:active { color: gray }
+  </style>
+
+    <script type="text/javascript">
+    var isTimerRunning, intTimer, clock, time;
+    var h, m, s, timeStr;
+    var startTime, curTime, diffTime;
+
+    function runTimer()
+    {
+      curTime = time.getTime();
+      time.setTime(curTime-1000);
+      h = time.getHours();
+      m = time.getMinutes();
+      s = time.getSeconds();
+      timeStr = "";
+      if(h < 10)
+	timeStr = timeStr + "0";
+      timeStr = timeStr + h + ":";
+      if(m < 10)
+	timeStr = timeStr + "0";
+      timeStr = timeStr + m +":";
+      if(s < 10)
+	timeStr = timeStr + "0";
+      timeStr = timeStr + s;
+      document.getElementById('clock').innerHTML = timeStr;
+      diffTime = 10799-(startTime-curTime)/1000;
+      switch(diffTime)
+      {
+	case 7200: alert("2 hours more."); break;
+	case 5400: alert("1 and a half hours more."); break;
+	case 3600: alert("Just 1 hour more."); break;
+	case 2700: alert("45 minutes more."); break;
+	case 1800: alert("Just half an hour more."); break;
+	case 900: alert("15 minutes more."); break;
+	case 300: alert("5 minutes more. Save all of your tabs!"); break;
+	case 120: alert("Just 2 minutes more."); break;
+	case 0: 
+	  window.clearInterval(intTimer);
+	  window.onbeforeunload = null;
+	  document.getElementById('cont').style.display="none";
+	  alert("Stop browsing. The computer will now close this window.");
+	  window.close();
+      }
+    }
+
+    function startTimer()
+    {
+      if(isTimerRunning == 1)
+	return 0;
+      if(startTime == 0)
+	startTime = time.getTime()+1000;
+      intTimer = setInterval(runTimer,1000);
+      isTimerRunning = 1;
+      window.onbeforeunload = function (e) { return "The timer is in progress. Navigating away will kill it."; };
+    }
+
+    function pauseTimer()
+    {
+      if(isTimerRunning == 0)
+	return 0; 
+      window.clearInterval(intTimer);
+      isTimerRunning = 0;
+    }
+
+    function resetTimer()
+    {
+      window.clearInterval(intTimer);
+      time = new Date(0, 0, 0, 3, 0, 0, 0);
+      clock.innerHTML = "03:00:00";
+      isTimerRunning = 0;
+      startTime = 0;
+      window.onbeforeunload = null;
+    }
+
+    function doInit()
+    {
+      clock = document.getElementById('clock');
+      isTimerRunning = 0;
+      time  = new Date(0, 0, 0, 3, 0, 0, 0);
+      startTime = 0;
+    }
+    </script>
+  </head>
+  <body onLoad="doInit()">
+    <div class="container" id="cont">
+      <div class="info">Do you waste time at the office browsing the web and taking too much time to complete your work? This tool will optimse your time spent doing desk work and minimise wastage. It will run a three hour timer and provides annoying reminders at regular intervals for you to work effectively. After three hours, the browser window will close. [Technical Info: This is a single html file and can simply be downloaded to your hard disk if you wish. It requires JavaScript to function - with permissions to display alerts, steal focus and close the browser window.]</div>
+    <div class="timer">
+      <div id="clock">03:00:00</div>
+      (<a href="#" onClick="startTimer()">Start</a>|<a href="#" onClick="pauseTimer()">Pause</a>|<a href="#" onClick="resetTimer()">Reset</a>)
+    </div>
+    </div>
+</body>
+</html>
